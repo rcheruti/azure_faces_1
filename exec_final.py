@@ -6,7 +6,9 @@
 import sys
 import requests
 import json
-from watson_developer_cloud import VisualRecognitionV3
+# from watson_developer_cloud import VisualRecognitionV3
+from io import BytesIO
+from PIL import Image, ImageDraw
 
 with open('./config.json') as f:
     keys = json.load(f)
@@ -32,6 +34,14 @@ def azureFacePos( imagem ):
     if( resp.status_code >= 200 and resp.status_code < 300 ):
         print('Resposta:')
         print( json.dumps(resp.json(), indent=4, sort_keys=True) )
+        rect = resp.json()[0]
+
+        print('Colocar retangulos na imagem...')
+        response = requests.get(imagem, verify=False)
+        img = Image.open(BytesIO(response.content))
+        draw = ImageDraw.Draw(img)
+        draw.rectangle( ( (rect['faceRectangle']['left'] , rect['faceRectangle']['top']), (rect['faceRectangle']['height'] , rect['faceRectangle']['width']) ), outline='red')
+        img.show()
     else:
         print( 'Erro ao analisar imagem. StatusCode: {}, {}'.format( resp.status_code, resp.text ) )
 
@@ -50,5 +60,5 @@ def watsonData( imagem ):
 # --------------
 # executar buscas
 
-watsonData('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
-#azureFacePos('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
+#watsonData('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
+azureFacePos('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
