@@ -15,7 +15,8 @@ headers = {
 body = { 'url': 'https://www.somostodosum.com.br/conteudo/imagem/16476.jpg' }
 params = { 
     'returnFaceLandmarks': 'false',
-    'returnFaceAttributes': 'age,gender,smile'
+    'returnFaceId': 'false',
+    'returnFaceAttributes': 'gender,emotion' # gender,emotion,smile
 }
 
 # ---------------------

@@ -9,6 +9,7 @@ Ex. `config.json`:
 ```json
 {
     "images": "aaa...",
-    "faces":  "bbb..."
+    "faces":  "bbb...",
+    "watson": "ccc..."
 }
 ```
