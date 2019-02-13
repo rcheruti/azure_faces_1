@@ -3,10 +3,12 @@
 # e usar Azure para pegar a localização do rosto
 # ----------------------------------
 
+verifySSL = True
+
 import sys
 import requests
 import json
-# from watson_developer_cloud import VisualRecognitionV3
+from watson_developer_cloud import VisualRecognitionV3
 from io import BytesIO
 from PIL import Image, ImageDraw
 
@@ -37,7 +39,7 @@ def azureFacePos( imagem ):
         rect = resp.json()[0]
 
         print('Colocar retangulos na imagem...')
-        response = requests.get(imagem, verify=False)
+        response = requests.get(imagem, verify=verifySSL)
         img = Image.open(BytesIO(response.content))
         draw = ImageDraw.Draw(img)
         draw.rectangle( ( (rect['faceRectangle']['left'] , rect['faceRectangle']['top']), (rect['faceRectangle']['height'] , rect['faceRectangle']['width']) ), outline='red')
@@ -49,7 +51,7 @@ def watsonData( imagem ):
     # sys.path.append('../')
     
     visual_recognition = VisualRecognitionV3( '2018-03-19', iam_apikey = keys['watson'] )
-    classes = visual_recognition.classify(imagesFile=imagem, threshold='0.6', classifier_ids='default' ).get_result()
+    classes = visual_recognition.classify(url=imagem, threshold='0.6', classifier_ids='default' ).get_result()
     # with open('../../../datasets/imagens/lions/imagem_test1.jpg', 'rb') as images_file:
     #     classes = visual_recognition.classify(
     #         images_file,
@@ -60,5 +62,5 @@ def watsonData( imagem ):
 # --------------
 # executar buscas
 
-#watsonData('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
+watsonData('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
 azureFacePos('https://www.somostodosum.com.br/conteudo/imagem/16476.jpg')
